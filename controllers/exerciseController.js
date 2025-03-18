@@ -12,3 +12,5 @@ export const getAllExercise = async (req, res) => {
     res.status(500).json({ message: "Unable to find list" });
   }
 };
+
+// get request for exercise list

@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import exerciseRoute from "./routes/exercises.js";
+import surveyRoute from "./routes/survey.js";
 const app = express();
 
 const PORT = process.env.PORT || 5050;
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/all", exerciseRoute);
+app.use("/survey", surveyRoute);
 
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);
