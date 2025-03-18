@@ -14,3 +14,7 @@ export const getAllExercise = async (req, res) => {
 };
 
 // get request for exercise list
+// 1. get select form
+// 2. logic in function
+// 3. add the exercises
+// 4. get request
