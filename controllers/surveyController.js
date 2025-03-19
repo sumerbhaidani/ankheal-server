@@ -26,3 +26,22 @@ export const sendResponse = async (req, res) => {
     });
   }
 };
+
+export const getExerciseList = async (req, res) => {
+  try {
+    const exerciseList = await db("exercises");
+    const surveyResult = await db("surveys"); /*.where({
+      survey_id: req.params.id,
+    });*/
+    const singleSurvey = surveyResult.find(
+      (survey) => survey.survey_id === req.params.id
+    ); // able to isolate single survey
+    // console.log(singleSurvey.survey_tags);
+    // for (i = 0; i < singleSurvey.survey_tags; i++) {
+    //   let;
+    // }
+    res.status(200).json(singleSurvey);
+  } catch (error) {
+    res.status(500).json({ message: `Unable to recieve data for survey id` });
+  }
+};
