@@ -42,28 +42,84 @@ export const getExerciseList = async (req, res) => {
 
     // Q1 - Done
     // need to validate if tag includes standing and sitting
-    let filteredafterQ1 = [];
-    if (singleSurvey.survey_tags.includes("Sitting")) {
-      filteredafterQ1 = exerciseList.filter((each) =>
-        each.tags.includes("Sitting")
-      );
-    } else {
-      filteredafterQ1 = exerciseList.filter((each) =>
+    let filteredAfterQ1 = [];
+    if (singleSurvey.survey_tags.includes("Standing")) {
+      filteredAfterQ1 = exerciseList.filter((each) =>
         each.tags.includes("Standing")
       );
+    } else if (singleSurvey.survey_tags.includes("Sitting")) {
+      filteredAfterQ1 = exerciseList.filter((each) =>
+        each.tags.includes("Sitting")
+      );
+    }
+
+    // Q4;
+    let filteredAfterQ4 = [];
+    if (singleSurvey.survey_tags.includes("Heel Active")) {
+      filteredAfterQ4 = filteredAfterQ1.filter((each) =>
+        each.tags.includes("Heel Active")
+      );
+    } else {
+      filteredAfterQ4 = filteredAfterQ1;
+    }
+
+    // // Q3
+    let filteredAfterQ3 = [];
+    if (singleSurvey.survey_tags.includes("Normal Stride")) {
+      filteredAfterQ3 = filteredAfterQ4.filter((each) =>
+        each.tags.includes("Normal Stride")
+      );
+    } else if (singleSurvey.survey_tags.includes("Stride Pain")) {
+      filteredAfterQ3 = filteredAfterQ4.filter((each) =>
+        each.tags.includes("Stride Pain")
+      );
+    } else {
+      filteredAfterQ3 = filteredAfterQ4;
     }
 
     // Q2 - Done
     let filteredAfterQ2 = [];
     if (singleSurvey.survey_tags.includes("One leg balance")) {
-      filteredAfterQ2 = filteredafterQ1.filter((each) =>
+      filteredAfterQ2 = filteredAfterQ3.filter((each) =>
         each.tags.includes("One leg balance")
       );
     } else {
-      filteredAfterQ2 = filteredafterQ1;
+      filteredAfterQ2 = filteredAfterQ3;
     }
 
-    console.log(filteredAfterQ2);
+    // Q5 - review tags in exercise table
+    let filteredAfterQ5 = [];
+    if (singleSurvey.survey_tags.includes("Slight Bend")) {
+      filteredAfterQ5 = filteredAfterQ2.filter((each) =>
+        each.tags.includes("Slight Bend")
+      );
+    } else if (singleSurvey.survey_tags.includes("Bend Pain")) {
+      filteredAfterQ5 = filteredAfterQ2.filter((each) =>
+        each.tags.includes("Bend Pain")
+      );
+    } else if (singleSurvey.survey_tags.includes("Slight Pain")) {
+      filteredAfterQ5 = filteredAfterQ2.filter((each) =>
+        each.tags.includes("Slight Pain")
+      );
+    } else if (singleSurvey.survey_tags.includes("Flexible")) {
+      filteredAfterQ5 = filteredAfterQ2.filter((each) =>
+        each.tags.includes("Flexible")
+      );
+    } else {
+      filteredAfterQ5 = filteredAfterQ2;
+    }
+
+    // Q6
+    let filteredAfterQ6 = [];
+    if (singleSurvey.survey_tags.includes("Agile")) {
+      filteredAfterQ6 = filteredAfterQ5.filter((each) =>
+        each.tags.includes("Agile")
+      );
+    } else {
+      filteredAfterQ6 = filteredAfterQ5;
+    }
+
+    console.log(filteredAfterQ6);
     res.status(200).json(singleSurvey);
   } catch (error) {
     res.status(500).json({ message: `Unable to recieve data for survey id` });
