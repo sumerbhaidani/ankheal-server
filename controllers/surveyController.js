@@ -133,7 +133,9 @@ export const getSurveyData = async (req, res) => {
     );
     res.status(200).json(singleSurvey);
   } catch (error) {
-    res.status(500).json({ message: `Unable to recieve data for survey id` });
+    res
+      .status(500)
+      .json({ message: `Unable to recieve data for survey id` }, error);
   }
 };
 
@@ -143,6 +145,8 @@ export const getAllSurvey = async (_req, res) => {
 
     res.status(200).json(surveyResult);
   } catch (error) {
-    res.status(500).json({ message: `Unable to recieve data for survey id` });
+    res
+      .status(500)
+      .json({ message: `Unable to recieve data for survey id` }, error);
   }
 };
