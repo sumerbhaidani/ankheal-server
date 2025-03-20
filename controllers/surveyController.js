@@ -136,3 +136,13 @@ export const getSurveyData = async (req, res) => {
     res.status(500).json({ message: `Unable to recieve data for survey id` });
   }
 };
+
+export const getAllSurvey = async (_req, res) => {
+  try {
+    const surveyResult = await db("surveys");
+
+    res.status(200).json(surveyResult);
+  } catch (error) {
+    res.status(500).json({ message: `Unable to recieve data for survey id` });
+  }
+};

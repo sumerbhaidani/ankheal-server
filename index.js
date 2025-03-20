@@ -7,7 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 5050;
 
 // Middleware - include link for CORS
-app.use(cors());
+/*{origin: process.env.CORS_ORIGIN}*/
+console.log(process.env.CORS_ORIGIN);
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
 app.use(express.json());
 
 app.use("/survey", surveyRoute);
