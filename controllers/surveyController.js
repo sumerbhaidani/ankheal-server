@@ -8,46 +8,21 @@ const db = initKnex(configuration);
 export const sendResponse = async (req, res) => {
   try {
     if (!req.body.survey_tags) {
-      return res.status(400).json({ message: "Ensure all details are filled" });
+      return res
+        .status(400)
+        .json({ message: "Ensure survey response is filled out completely" });
     }
-    const response = await db("surveys").insert({
-      survey_id: idGenerator(),
-      survey_tags: JSON.stringify(req.body.survey_tags),
-      created_at: new Date().getTime(),
-    });
-    const surveyLatest = await db("surveys")
-      .orderBy("created_at", "desc")
-      .first();
-    res.status(201).json(surveyLatest);
-  } catch (error) {
-    res.status(500).json({
-      message: "Unable to post survey response, please try again",
-      error,
-    });
-  }
-};
 
-export const getExerciseList = async (req, res) => {
-  try {
     const exerciseList = await db("exercises");
-    const surveyResult = await db("surveys");
+    let postedTags = req.body.survey_tags;
 
-    const singleSurvey = surveyResult.find(
-      (survey) => survey.survey_id === req.params.id
-    ); // able to isolate single survey
-    // console.log(singleSurvey.survey_tags);
-    // console.log(exerciseList);
-    // let allExerciseTags = exerciseList.map((each) => each.tags);
-    // console.log(allExerciseTags);
-
-    // Q1 - Done
-    // need to validate if tag includes standing and sitting
+    // Q1
     let filteredAfterQ1 = [];
-    if (singleSurvey.survey_tags.includes("Standing")) {
+    if (postedTags.includes("Standing")) {
       filteredAfterQ1 = exerciseList.filter((each) =>
         each.tags.includes("Standing")
       );
-    } else if (singleSurvey.survey_tags.includes("Sitting")) {
+    } else if (postedTags.includes("Sitting")) {
       filteredAfterQ1 = exerciseList.filter((each) =>
         each.tags.includes("Sitting")
       );
@@ -55,7 +30,7 @@ export const getExerciseList = async (req, res) => {
 
     // Q4;
     let filteredAfterQ4 = [];
-    if (singleSurvey.survey_tags.includes("Heel Active")) {
+    if (postedTags.includes("Heel Active")) {
       filteredAfterQ4 = filteredAfterQ1.filter((each) =>
         each.tags.includes("Heel Active")
       );
@@ -63,13 +38,13 @@ export const getExerciseList = async (req, res) => {
       filteredAfterQ4 = filteredAfterQ1;
     }
 
-    // // Q3
+    // Q3
     let filteredAfterQ3 = [];
-    if (singleSurvey.survey_tags.includes("Normal Stride")) {
+    if (postedTags.includes("Normal Stride")) {
       filteredAfterQ3 = filteredAfterQ4.filter((each) =>
         each.tags.includes("Normal Stride")
       );
-    } else if (singleSurvey.survey_tags.includes("Stride Pain")) {
+    } else if (postedTags.includes("Stride Pain")) {
       filteredAfterQ3 = filteredAfterQ4.filter((each) =>
         each.tags.includes("Stride Pain")
       );
@@ -77,9 +52,9 @@ export const getExerciseList = async (req, res) => {
       filteredAfterQ3 = filteredAfterQ4;
     }
 
-    // Q2 - Done
+    // Q2
     let filteredAfterQ2 = [];
-    if (singleSurvey.survey_tags.includes("One leg balance")) {
+    if (postedTags.includes("One leg balance")) {
       filteredAfterQ2 = filteredAfterQ3.filter((each) =>
         each.tags.includes("One leg balance")
       );
@@ -87,21 +62,21 @@ export const getExerciseList = async (req, res) => {
       filteredAfterQ2 = filteredAfterQ3;
     }
 
-    // Q5 - review tags in exercise table
+    // Q5
     let filteredAfterQ5 = [];
-    if (singleSurvey.survey_tags.includes("Slight Bend")) {
+    if (postedTags.includes("Slight Bend")) {
       filteredAfterQ5 = filteredAfterQ2.filter((each) =>
         each.tags.includes("Slight Bend")
       );
-    } else if (singleSurvey.survey_tags.includes("Bend Pain")) {
+    } else if (postedTags.includes("Bend Pain")) {
       filteredAfterQ5 = filteredAfterQ2.filter((each) =>
         each.tags.includes("Bend Pain")
       );
-    } else if (singleSurvey.survey_tags.includes("Slight Pain")) {
+    } else if (postedTags.includes("Slight Pain")) {
       filteredAfterQ5 = filteredAfterQ2.filter((each) =>
         each.tags.includes("Slight Pain")
       );
-    } else if (singleSurvey.survey_tags.includes("Flexible")) {
+    } else if (postedTags.includes("Flexible")) {
       filteredAfterQ5 = filteredAfterQ2.filter((each) =>
         each.tags.includes("Flexible")
       );
@@ -111,7 +86,7 @@ export const getExerciseList = async (req, res) => {
 
     // Q6
     let filteredAfterQ6 = [];
-    if (singleSurvey.survey_tags.includes("Agile")) {
+    if (postedTags.includes("Agile")) {
       filteredAfterQ6 = filteredAfterQ5.filter((each) =>
         each.tags.includes("Agile")
       );
@@ -119,7 +94,43 @@ export const getExerciseList = async (req, res) => {
       filteredAfterQ6 = filteredAfterQ5;
     }
 
-    console.log(filteredAfterQ6);
+    let finalList = [];
+    if (filteredAfterQ6[2] === undefined) {
+      finalList = filteredAfterQ6.push(exerciseList[2]);
+    } else {
+      finalList = filteredAfterQ6;
+    }
+
+    const response = await db("surveys").insert({
+      survey_id: idGenerator(),
+      survey_tags: JSON.stringify(req.body.survey_tags),
+      created_at: new Date().getTime(),
+      exercise_1: finalList[0].exercise_id,
+      exercise_2: finalList[1].exercise_id,
+      exercise_3: finalList[2].exercise_id,
+      exercises_all: JSON.stringify(finalList),
+    });
+
+    const surveyLatest = await db("surveys")
+      .orderBy("created_at", "desc")
+      .first();
+
+    res.status(201).json(surveyLatest);
+  } catch (error) {
+    res.status(500).json({
+      message: "Unable to post survey response, please try again",
+      error,
+    });
+  }
+};
+
+export const getSurveyData = async (req, res) => {
+  try {
+    const surveyResult = await db("surveys");
+
+    const singleSurvey = surveyResult.find(
+      (survey) => survey.survey_id === req.params.id
+    );
     res.status(200).json(singleSurvey);
   } catch (error) {
     res.status(500).json({ message: `Unable to recieve data for survey id` });

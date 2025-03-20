@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import exerciseRoute from "./routes/exercises.js";
 import surveyRoute from "./routes/survey.js";
 const app = express();
 
@@ -11,12 +10,6 @@ const PORT = process.env.PORT || 5050;
 app.use(cors());
 app.use(express.json());
 
-// basic home route
-app.get("/", (req, res) => {
-  res.send("Welcome to my API");
-});
-
-app.use("/all", exerciseRoute);
 app.use("/survey", surveyRoute);
 
 app.listen(PORT, () => {
