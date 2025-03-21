@@ -95,7 +95,7 @@ export const sendResponse = async (req, res) => {
     }
 
     let finalList = [];
-    if (filteredAfterQ6[2] === undefined) {
+    if (filteredAfterQ6.length < 3) {
       finalList = filteredAfterQ6.push(exerciseList[2]);
     } else {
       finalList = filteredAfterQ6;
