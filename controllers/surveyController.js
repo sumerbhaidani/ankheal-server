@@ -95,10 +95,17 @@ export const sendResponse = async (req, res) => {
     }
 
     let finalList = [];
-    if (filteredAfterQ6.length < 3) {
-      finalList = filteredAfterQ6.push(exerciseList[2]);
-    } else {
+    if (filteredAfterQ6.length == 3) {
       finalList = filteredAfterQ6;
+    } else if (filteredAfterQ6.length == 2) {
+      filteredAfterQ6.unshift(exerciseList[2]);
+      finalList = [...filteredAfterQ6];
+    } else if (filteredAfterQ6.length == 1) {
+      filteredAfterQ6.unshift(exerciseList[1], exerciseList[2]);
+      finalList = [...filteredAfterQ6];
+    } else if (filteredAfterQ6.length == 0) {
+      filteredAfterQ6.push(exerciseList[0], exerciseList[1], exerciseList[2]);
+      finalList = [...filteredAfterQ6];
     }
 
     const response = await db("surveys").insert({

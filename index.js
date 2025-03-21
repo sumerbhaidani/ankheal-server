@@ -7,12 +7,11 @@ const app = express();
 
 const PORT = process.env.PORT || 5050;
 
-// Middleware
-console.log(process.env.CORS_ORIGIN);
-{
-  origin: process.env.CORS_ORIGIN;
-}
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+  })
+);
 app.use(express.json());
 
 app.use("/survey", surveyRoute);
