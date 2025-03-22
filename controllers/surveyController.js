@@ -58,8 +58,10 @@ export const sendResponse = async (req, res) => {
       filteredAfterQ2 = filteredAfterQ3.filter((each) =>
         each.tags.includes("One leg balance")
       );
-    } else {
-      filteredAfterQ2 = filteredAfterQ3;
+    } else if (postedTags.includes("No Balance")) {
+      filteredAfterQ2 = filteredAfterQ3.filter((each) =>
+        each.tags.includes("No Balance")
+      );
     }
 
     // Q5
@@ -95,17 +97,28 @@ export const sendResponse = async (req, res) => {
     }
 
     let finalList = [];
-    if (filteredAfterQ6.length == 3) {
+    if (filteredAfterQ6.length == 4) {
       finalList = filteredAfterQ6;
-    } else if (filteredAfterQ6.length == 2) {
+    } else if (filteredAfterQ6.length == 3) {
       filteredAfterQ6.unshift(exerciseList[2]);
       finalList = [...filteredAfterQ6];
-    } else if (filteredAfterQ6.length == 1) {
+    } else if (filteredAfterQ6.length == 2) {
       filteredAfterQ6.unshift(exerciseList[1], exerciseList[2]);
       finalList = [...filteredAfterQ6];
-    } else if (filteredAfterQ6.length == 0) {
-      filteredAfterQ6.push(exerciseList[0], exerciseList[1], exerciseList[2]);
+    } else if (filteredAfterQ6.length == 1) {
+      filteredAfterQ6.unshift(
+        exerciseList[0],
+        exerciseList[1],
+        exerciseList[2]
+      );
       finalList = [...filteredAfterQ6];
+    } else if (filteredAfterQ6.length == 0) {
+      filteredAfterQ6.push(
+        exerciseList[0],
+        exerciseList[1],
+        exerciseList[2],
+        exerciseList[4]
+      );
     }
 
     const response = await db("surveys").insert({
@@ -116,6 +129,7 @@ export const sendResponse = async (req, res) => {
       exercise_2: finalList[1].exercise_id,
       exercise_3: finalList[2].exercise_id,
       exercises_all: JSON.stringify(finalList),
+      exercise_4: finalList[3].exercise_id,
     });
 
     const surveyLatest = await db("surveys")
