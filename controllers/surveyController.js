@@ -117,7 +117,7 @@ export const sendResponse = async (req, res) => {
         exerciseList[0],
         exerciseList[1],
         exerciseList[2],
-        exerciseList[4]
+        exerciseList[12]
       );
     }
 
