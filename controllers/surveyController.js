@@ -130,6 +130,7 @@ export const sendResponse = async (req, res) => {
       exercise_3: finalList[2].exercise_id,
       exercises_all: JSON.stringify(finalList),
       exercise_4: finalList[3].exercise_id,
+      user_id: req.body.user_id,
     });
 
     const surveyLatest = await db("surveys")
