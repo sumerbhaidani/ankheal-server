@@ -161,14 +161,17 @@ export const getSurveyData = async (req, res) => {
   }
 };
 
-export const getAllSurvey = async (_req, res) => {
+export const getSingleUserSurveys = async (req, res) => {
   try {
-    const surveyResult = await db("surveys");
-
-    res.status(200).json(surveyResult);
+    const allSurveys = await db("surveys");
+    const singleUser = allSurveys.filter((each) => {
+      return each.user_id === req.params.id;
+    });
+    console.log(allSurveys);
+    res.status(200).json(singleUser);
   } catch (error) {
     res
       .status(500)
-      .json({ message: `Unable to recieve data for survey id` }, error);
+      .json({ message: `Unable to retrieve data for user ${user_id}` }, error);
   }
 };
