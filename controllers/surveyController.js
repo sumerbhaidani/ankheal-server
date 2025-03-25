@@ -167,7 +167,6 @@ export const getSingleUserSurveys = async (req, res) => {
     const singleUser = allSurveys.filter((each) => {
       return each.user_id === req.params.id;
     });
-    console.log(allSurveys);
     res.status(200).json(singleUser);
   } catch (error) {
     res
